@@ -17,16 +17,16 @@ int valueDigital;
 
 #include "arduinoFFT.h"
 
-#define SAMPLES 128             // SAMPLES-pt FFT. Must be a base 2 number. Max 128 for Arduino Uno.
-#define SAMPLING_FREQUENCY 2048 // Ts = Based on Nyquist, must be 2 times the highest expected frequency.
+#define SAMPLES 128             // SAMPLES-pt FFT - muss eine Zahl zur Basis 2 sein, maximal 128 für Arduino Uno
+#define SAMPLING_FREQUENCY 2048 // Ts = basierend auf Nyquist, muss das zweifache der höchsten erwarteten Frequenz sein
 
 arduinoFFT FFT = arduinoFFT();
 
 unsigned int samplingPeriod;
 unsigned long microSeconds;
 
-double vReal[SAMPLES]; // create vector of size SAMPLES to hold real values
-double vImag[SAMPLES]; // create vector of size SAMPLES to hold imaginary values
+double vReal[SAMPLES]; // Erzeugen eines Vektors der Größe SAMPLES zur Aufnahme realer Werte
+double vImag[SAMPLES]; // Erstellung eines Vektors der Größe SAMPLES zur Aufnahme imaginärer Werte
 
 /**
  *
