@@ -44,6 +44,10 @@ void setup()
   // Serial.begin(115200); // Baudrate für den seriellen Monitor
   samplingPeriod = round(1000000 * (1.0 / SAMPLING_FREQUENCY)); // Zeitraum in Mikrosekunden
   pinMode(LED_BUILTIN, OUTPUT);
+  // Wait for the serial port to connect.
+  while (!Serial)
+  {
+  }
 }
 
 /**
@@ -55,9 +59,23 @@ void setup()
  *
  *
  **/
-
-void loop()
+void testing()
 {
+  // Check if there is data available in the read buffer
+  if (Serial.available() > 0)
+  {
+    // Got something
+    int read = Serial.read();
+    if (read >= 0)
+    {
+      // Print out what we read
+      Serial.print(read);
+    }
+  }
+}
+void audioControll()
+{
+
   /* Probe SAMPLES Zeiten */
   for (int i = 0; i < SAMPLES; i++)
   {
@@ -80,43 +98,38 @@ void loop()
 
   /* Spitzenfrequenz ermitteln und Spitzenwert ausgeben */
   double peak = FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
-
-  if (peak < 250 && peak > 180)
+  if (peak < 5)
   {
-    Serial.print("ERSTE:\t\t");
-    digitalWrite(LED_BUILTIN, HIGH);
+    Serial.write(0);
+    Serial.flush();
+    // Serial.println("0");
   }
-  else if (peak < 300 && peak >= 250)
+  else if (peak < 135 && peak > 5)
   {
-    Serial.print("ZWEITE:\t\t");
-    digitalWrite(LED_BUILTIN, HIGH);
-  }
-  else if (peak < 500 && peak >= 300)
-  {
-    Serial.print("DRITTE:\t\t");
-    digitalWrite(LED_BUILTIN, HIGH);
-  }
-  else if (peak < 1000 && peak >= 500)
-  {
-    Serial.print("DRITTE:\t\t");
+    Serial.write(1);
+    Serial.flush();
+    // Serial.print("1 ");
+    // Serial.println(peak);
     digitalWrite(LED_BUILTIN, HIGH);
   }
   else
   {
-    if (!(peak >= 2 && peak <= 3))
-    {
-      Serial.print("NICHTS:\t\t");
-    }
+    Serial.write(2);
+    Serial.flush();
+    // Serial.print("2 ");
+    // Serial.println(peak);
     digitalWrite(LED_BUILTIN, LOW);
   }
-
-  if (!(peak >= 2 && peak <= 3))
-  {
-    Serial.println(peak); // gibt die dominanteste Frequenz aus
-  }
+  // Serial.write("Mikrocontroller funktioniert");
 
   /* Skript stoppt hier, Hardware-Reset erforderlich */
   // while (1); // einmalig tun
+  Serial.flush();
+  // delay(15);
+}
 
-  delay(1000);
+void loop()
+{
+  //testing();
+  audioControll();
 }
